@@ -55,7 +55,8 @@ public class ArduinoSerial implements SerialPortEventListener {
 	
 	private Webcam webcam;
 	private DetectImage detect;
-	Voice voice;
+	private Voice voice;
+	private InfoOptimization op;
 
 	public void initialize() {
                 // the next line is for Raspberry Pi and 
@@ -85,6 +86,7 @@ public class ArduinoSerial implements SerialPortEventListener {
 			webcam=Webcam.getDefault();
 			VoiceManager vm = VoiceManager.getInstance();
 	        voice = vm.getVoice("kevin16");
+	        op=new InfoOptimization();
 	 
 	        voice.allocate();
 		} catch (IOException e1) {
@@ -150,19 +152,19 @@ public class ArduinoSerial implements SerialPortEventListener {
 				
 				 if(labels!=null){
 					 StringBuilder sb=new StringBuilder();
-					 if(disM<=3){
-						 sb.append("Caution!There is a "+labels.get(0).getDescription()+" ");
+					 if(disM<=2){
+						 sb.append("Caution!There is a "+op.optimize(labels.get(0).getDescription())+" ");
 						 if(labels.size()==2){
-							 sb.append("or "+labels.get(1).getDescription()+" ");
+							 sb.append("or "+op.optimize(labels.get(1).getDescription())+" ");
 						 }
 						 
 						 sb.append(disM+" meters in front of you.");
 	 
 					 }
-					 else if(disM<=5){
-						 sb.append("Attention!There is a "+labels.get(0).getDescription()+" ");
+					 else if(disM<=4){
+						 sb.append("Attention!There is a "+op.optimize(labels.get(0).getDescription())+" ");
 						 if(labels.size()==2){
-							 sb.append("or "+labels.get(1).getDescription()+" ");
+							 sb.append("or "+op.optimize(labels.get(1).getDescription())+" ");
 						 }
 						 
 						 sb.append(disM+" meters in front of you.");
@@ -173,9 +175,11 @@ public class ArduinoSerial implements SerialPortEventListener {
 					 
 					 System.out.println(sb.toString());
 					 voice.speak(sb.toString());
+					 
 				 }
 				 else{
 					 voice.speak("All clear");
+					 System.out.println("All Clear");
 				 }
 
 			} catch (Exception e) {

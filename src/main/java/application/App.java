@@ -28,7 +28,6 @@ public class App extends Application {
 		//initial page
 		Pane InitialPageRoot=FXMLLoader.load(getClass().getResource("StartPage.fxml"));
 		Scene InitialPageScene=new Scene(InitialPageRoot);
-		InitialPageScene.getStylesheets().add("license/start.css");
 		
 		window.setScene(InitialPageScene);
 		window.show();
